@@ -68,38 +68,6 @@ A Flask web application that uses the state-of-the-art BART-large-CNN model to g
     └── model_manager.py   # Model management utilities
 ```
 
-## API Usage
-
-### Generate a Summary
-
-```python
-import requests
-import json
-
-url = "http://127.0.0.1:5000/api/summarize"
-headers = {"Content-Type": "application/json"}
-data = {
-    "text": "Your long text to summarize goes here..."
-}
-
-response = requests.post(url, headers=headers, data=json.dumps(data))
-result = response.json()
-
-print(f"Summary: {result['summary']}")
-print(f"Compression: {result['compression_ratio']}%")
-```
-
-### Get Model Information
-
-```python
-import requests
-
-url = "http://127.0.0.1:5000/api/model"
-response = requests.get(url)
-model_info = response.json()
-
-print(f"Model: {model_info['model']}")
-```
 
 ## Model Information
 
