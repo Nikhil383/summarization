@@ -1,15 +1,13 @@
-# Advanced Text Summarization
+# BART-CNN Text Summarization
 
-A Flask web application that uses state-of-the-art NLP models to generate high-quality summaries of text content. This application offers multiple summarization models, each optimized for different types of content.
-
-![Text Summarization App](https://i.imgur.com/example.png)
+A Flask web application that uses the state-of-the-art BART-large-CNN model to generate high-quality summaries of text content.
 
 ## Features
 
-- **Multiple Summarization Models**:
-  - BART-large-CNN: Optimized for news articles and general content
-  - PEGASUS-XSUM: Excellent for extreme summarization with high compression
-  - BART-large-XSUM: Fine-tuned for concise, single-sentence summaries
+- **Powerful Summarization Model**:
+  - Uses BART-large-CNN, specifically fine-tuned for summarization tasks
+  - Optimized for news articles and general content
+  - Produces coherent and readable summaries
 
 - **Enhanced User Experience**:
   - Clean, responsive interface with dark mode support
@@ -50,9 +48,8 @@ A Flask web application that uses state-of-the-art NLP models to generate high-q
    python app.py
    ```
 2. Open your browser and navigate to `http://127.0.0.1:5000`
-3. Select a summarization model based on your needs
-4. Enter or paste the text you want to summarize
-5. Click "Generate Summary" and wait for the result
+3. Enter or paste the text you want to summarize
+4. Click "Generate Summary" and wait for the result
 
 ## Project Structure
 
@@ -71,18 +68,44 @@ A Flask web application that uses state-of-the-art NLP models to generate high-q
     └── model_manager.py   # Model management utilities
 ```
 
+## API Usage
 
+### Generate a Summary
 
+```python
+import requests
+import json
+
+url = "http://127.0.0.1:5000/api/summarize"
+headers = {"Content-Type": "application/json"}
+data = {
+    "text": "Your long text to summarize goes here..."
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(data))
+result = response.json()
+
+print(f"Summary: {result['summary']}")
+print(f"Compression: {result['compression_ratio']}%")
+```
+
+### Get Model Information
+
+```python
+import requests
+
+url = "http://127.0.0.1:5000/api/model"
+response = requests.get(url)
+model_info = response.json()
+
+print(f"Model: {model_info['model']}")
+```
 
 ## Model Information
 
-This application provides multiple summarization models:
+This application uses the BART-large-CNN model from Facebook AI, which is a sequence-to-sequence model pre-trained on a large corpus of text and fine-tuned specifically for summarization tasks on the CNN/Daily Mail dataset.
 
-1. **BART-large-CNN**: A sequence-to-sequence model from Facebook AI, fine-tuned on CNN/Daily Mail dataset. Best for news articles and general content.
-
-2. **PEGASUS-XSUM**: Google's model specifically trained for extreme summarization. Creates very concise summaries with high compression rates.
-
-3. **BART-large-XSUM**: Facebook's BART model fine-tuned on the XSUM dataset. Optimized for generating single-sentence summaries.
+BART (Bidirectional and Auto-Regressive Transformers) combines the bidirectional encoder from BERT with the auto-regressive decoder from GPT, making it particularly effective for text generation tasks like summarization.
 
 ## Contributing
 

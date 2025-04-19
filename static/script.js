@@ -27,24 +27,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-
-    // Model selection handling
-    const modelSelect = document.getElementById('model-select');
-    if (modelSelect) {
-        modelSelect.addEventListener('change', function() {
-            const modelInfo = document.getElementById('model-info');
-            if (modelInfo) {
-                const selectedModel = this.value;
-                
-                // Update model info based on selection
-                if (selectedModel === 'facebook/bart-large-cnn') {
-                    modelInfo.textContent = 'BART-large-CNN: Optimized for news articles and general summarization';
-                } else if (selectedModel === 'google/pegasus-xsum') {
-                    modelInfo.textContent = 'PEGASUS-XSUM: Excellent for extreme summarization with high compression';
-                } else if (selectedModel === 'facebook/bart-large-xsum') {
-                    modelInfo.textContent = 'BART-large-XSUM: Fine-tuned for concise, single-sentence summaries';
-                }
-            }
-        });
-    }
 });

@@ -6,7 +6,7 @@ import time
 
 # Import custom modules
 from utils.text_processor import clean_text, count_words, calculate_compression_ratio
-from utils.model_manager import summarize_text, get_model_config, AVAILABLE_MODELS, DEFAULT_MODEL
+from utils.model_manager import summarize_text, get_model_info, MODEL_CONFIG
 
 # Configure logging
 logging.basicConfig(
@@ -26,10 +26,9 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # Limit uploads to 1MB
 
 @app.route('/', methods=['GET'])
 def index():
-    # Pass available models to the template
-    models = [{'id': model_id, 'name': config['name']}
-              for model_id, config in AVAILABLE_MODELS.items()]
-    return render_template('index.html', models=models, default_model=DEFAULT_MODEL)
+    # Get model info
+    model_info = get_model_info()
+    return render_template('index.html', model_info=model_info)
 
 @app.route('/summarize', methods=['POST'])
 def summarize():
@@ -37,13 +36,12 @@ def summarize():
 
     # Get form data
     text = request.form.get('text', '')
-    model_name = request.form.get('model', DEFAULT_MODEL)
 
     # Clean the text
     cleaned_text = clean_text(text)
 
     # Generate summary
-    summary = summarize_text(cleaned_text, model_name)
+    summary = summarize_text(cleaned_text)
 
     # Calculate statistics
     original_word_count = count_words(cleaned_text)
@@ -52,11 +50,10 @@ def summarize():
     processing_time = round(time.time() - start_time, 2)
 
     # Get model info
-    model_config = get_model_config(model_name)
-    model_display_name = model_config['name']
+    model_info = get_model_info()
 
     # Log the request
-    logger.info(f"Summarized text with {original_word_count} words using {model_display_name} model")
+    logger.info(f"Summarized text with {original_word_count} words using {model_info['name']} model")
 
     return render_template(
         'result.html',
@@ -66,7 +63,7 @@ def summarize():
         summary_word_count=summary_word_count,
         compression_ratio=compression_ratio,
         processing_time=processing_time,
-        model_name=model_display_name
+        model_name=model_info['name']
     )
 
 @app.route('/api/summarize', methods=['POST'])
@@ -82,13 +79,12 @@ def api_summarize():
 
         # Get parameters
         text = data['text']
-        model_name = data.get('model', DEFAULT_MODEL)
 
         # Clean the text
         cleaned_text = clean_text(text)
 
         # Generate summary
-        summary = summarize_text(cleaned_text, model_name)
+        summary = summarize_text(cleaned_text)
 
         # Calculate statistics
         original_word_count = count_words(cleaned_text)
@@ -100,18 +96,17 @@ def api_summarize():
             'original_word_count': original_word_count,
             'summary_word_count': summary_word_count,
             'compression_ratio': round(compression_ratio * 100),
-            'model': model_name
+            'model': MODEL_CONFIG['name']
         })
     except Exception as e:
         logger.error(f"API error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/models', methods=['GET'])
-def api_models():
-    """Return information about available models"""
+@app.route('/api/model', methods=['GET'])
+def api_model():
+    """Return information about the model"""
     return jsonify({
-        'models': AVAILABLE_MODELS,
-        'default': DEFAULT_MODEL
+        'model': get_model_info()
     })
 
 @app.errorhandler(413)
@@ -128,8 +123,7 @@ def not_found(error):
 
 if __name__ == '__main__':
     # Log startup information
-    logger.info(f"Starting Text Summarization App with {len(AVAILABLE_MODELS)} available models")
-    logger.info(f"Default model: {DEFAULT_MODEL}")
+    logger.info(f"Starting Text Summarization App with BART-large-CNN model")
     logger.info(f"Running on {'GPU' if torch.cuda.is_available() else 'CPU'}")
 
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
