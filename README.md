@@ -1,4 +1,4 @@
-# BART-CNN Text Summarization
+# Text Summarization
 
 A Flask web application that uses the state-of-the-art BART-large-CNN model to generate high-quality summaries of text content.
 
