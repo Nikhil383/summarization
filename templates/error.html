@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Text Summarization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Error</h1>
+        <div class="summary" style="border-left-color: #e74c3c;">
+            <p>{{ error }}</p>
+        </div>
+        <div class="btn-container">
+            <a href="/" class="btn">Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

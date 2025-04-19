@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summarization Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Summarization Result</h1>
-    <p>{{ summary }}</p>
+    <div class="container">
+        <h1>Summarization Result</h1>
+        <p style="text-align: center; margin-bottom: 20px;">Generated using <strong>{{ model_name }}</strong> model</p>
+
+        <h2>Summary</h2>
+        <div class="summary">
+            <p>{{ summary }}</p>
+            <button class="copy-btn" title="Copy to clipboard">📋</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">{{ original_word_count }}</div>
+                <div class="stat-label">Original Words</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ summary_word_count }}</div>
+                <div class="stat-label">Summary Words</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ (compression_ratio * 100)|round|int }}%</div>
+                <div class="stat-label">Reduction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ processing_time }}s</div>
+                <div class="stat-label">Processing Time</div>
+            </div>
+        </div>
+
+        <h2>Original Text</h2>
+        <div class="original">
+            <p>{{ original_text }}</p>
+        </div>
+
+        <div class="btn-container">
+            <a href="/" class="btn">Summarize Another Text</a>
+            <a href="#" class="btn" onclick="window.print(); return false;">Print Results</a>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 20px;">
+        <h2>How It Works</h2>
+        <p>This summary was generated using advanced natural language processing techniques:</p>
+
+        <ol style="margin-left: 20px;">
+            <li>Your text was preprocessed to remove unnecessary elements</li>
+            <li>The {{ model_name }} model analyzed the content</li>
+            <li>The model generated a concise summary while preserving key information</li>
+            <li>Statistics were calculated to show the compression ratio</li>
+        </ol>
+
+        <p style="margin-top: 15px;">For different summarization styles, try other models available on the main page.</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
